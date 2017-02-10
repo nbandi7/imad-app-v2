@@ -35,7 +35,6 @@ app.get('/submit-name:name',function(req,res){
    names.push(name);
    //JSON
    
-   
    res.send(JSON.stringfy(names)); //TODO
 });
 
