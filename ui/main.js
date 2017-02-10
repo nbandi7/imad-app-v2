@@ -24,8 +24,7 @@ button.onclick = function() {
 };
 
 //submit name
-var nameInput = document.getElementById("name");
-var name = nameInput.value;
+
 var submit = document.getElementById("submit_btn");
 submit.onclick = function(){
     //make a request to the server and send the name
@@ -49,6 +48,8 @@ submit.onclick = function(){
             }
         }
     };
+    var nameInput = document.getElementById("name");
+    var name = nameInput.value; 
     //Make a request
     request.open('GET', 'http://nbandi7.imad.hasura-app.io/submit-name=' + name ,true);
     request.send(null);
