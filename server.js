@@ -28,7 +28,7 @@ app.get('/ui/main.js', function (req, res) {
 });
 
 var names = [];
-app.get('/submit-name/:name',function(req,res){//submit-name?name=xxxxxx
+app.get('/submit-name',function(req,res){//submit-name?name=xxxxxx
    //get the name from the request
    var name = req.params.name; //TODO
    
