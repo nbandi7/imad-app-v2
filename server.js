@@ -30,7 +30,7 @@ app.get('/ui/main.js', function (req, res) {
 var names = [];
 app.get('/submit-name/:name',function(req,res){
    //get the name from the request
-   var name = req.query.name; //TODO
+   var name = req.params.name; //TODO
    
    names.push(name);
    //JSON
