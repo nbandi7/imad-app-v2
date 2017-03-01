@@ -9,7 +9,6 @@ var config = {
     host : 'db.imad.hasura-app.io',
     port : '5432',
     password : process.env.DB_PASSWORD
-    
 };
 
 var app = express();
@@ -34,11 +33,7 @@ app.get('/test-db',function(req,res){
         }else{
             res.send(JSON.stringfy(result));
         }
-        
     });
-    
-    
-    
 });
 
 app.get('/ui/style.css', function (req, res) {
