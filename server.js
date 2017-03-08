@@ -81,51 +81,58 @@ app.get('/hash/:input',function(req,res){
     res.send(hashedString) ;
 });
 
-app.post('create-user',function(req,res){
+app.post('/create-user',function(req,res){
+    
     var username = req.body.username;
     var password = req.body.password;
+    
     var salt = crypto.randomBytes(128).toString('hex');
     var dbString = hash(password,salt);
-    pool.query('INSERT INTO "user" (username,password) VALUES ($1,$2',[username,dbString],function(req,res){
+    pool.query('INSERT INTO "user" (username,password) VALUES ($1 ,$2)',[username,dbString],function(err,result){
+        
         if(err){
-             res.status(500).send(err.toString());
-        } else {
-            res.send("User successfully created " + username);
+            res.status(500).send(err.toString());
+        }else{
+            res.send("USER SUCCESSFULLY CREATED "+username);
         }
+        
     });
+    
 });
+app.post('/login',function(req,res){
+    
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    
 
-app.post('/login', function (req, res) {
-   var username = req.body.username;
-   var password = req.body.password;
-   
-   pool.query('SELECT * FROM "user" WHERE username = $1', [username], function (err, result) {
-      if (err) {
-          res.status(500).send(err.toString());
-      } else {
-          if (result.rows.length === 0) {
-              res.status(403).send('username/password is invalid');
-          } else {
-              // Match the password
-              var dbString = result.rows[0].password;
-              var salt = dbString.split('$')[2];
-              var hashedPassword = hash(password, salt); // Creating a hash based on the password submitted and the original salt
-              if (hashedPassword === dbString) {
+    pool.query('SELECT * FROM "user" WHERE username = $1',[username],function(err,result){
+        
+        if(err){
+            res.status(500).send(err.toString());
+        }else{
+            if(result.rows.length === 0){
+                res.status(403).send('username/password is invalid !');
+            }else{
+               var dbString = result.rows[0].password;
+                var salt = dbString.split('$')[2];
+                var hashedP = hash(password,salt);
+                if(hashedP === dbString  ){
+                    req.session.auth = {userId:result.rows[0].id};
+                    res.send(username);
+                    
+                  }else{
+                     res.status(403).send('username/password is invalid !');
+                 } 
                 
-                // Set the session
-                req.session.auth = {userId: result.rows[0].id};
-                // set cookie with a session id
-                // internally, on the server side, it maps the session id to an object
-                // { auth: {userId }}
-                
-                res.send('credentials correct!');
-                
-              } else {
-                res.status(403).send('username/password is invalid');
-              }
-          }
-      }
-   });
+            }
+            
+            
+        }
+        
+    });
+ 
+        
 });
 
 app.get('/check-login', function (req, res) {
@@ -135,18 +142,19 @@ app.get('/check-login', function (req, res) {
            if (err) {
               res.status(500).send(err.toString());
            } else {
-              res.send(result.rows[0].username);    
+              res.send(result.rows[0].username);
            }
        });
    } else {
-       res.status(400).send('You are not logged in');
+       res.status(400).send('<center><img src="http://cdn.appthemes.com/wp-content/uploads/2013/03/not-logged-in.png" alt="Not Logged In !"></center>');
    }
 });
 
 
-app.get('/logout', function (req, res) {
-   delete req.session.auth;
-   res.send('<html><body>Logged out!<br/><br/><a href="/">Back to home</a></body></html>');
+
+app.get('/logout',function(req,res){
+    delete req.session.auth;
+    res.send('<center><img src="http://www.carshowsafari.com/images/logged_out/successfully-logged-out.png" alt="successfully logged Out !"><br><a href="http://nbandi7.imad.hasura-app.io/">Go To Home Page !</a><center>');
 });
 
 
