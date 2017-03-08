@@ -11,7 +11,7 @@ var config = {
     database : 'nbandi7',
     host : 'db.imad.hasura-app.io',
     port : '5432',
-    password : "db-nbandi7-69227"
+    password : process.env.DB_PASSWORD
 };
 
 var app = express();
