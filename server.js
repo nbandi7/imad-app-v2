@@ -72,7 +72,7 @@ app.get('/', function (req, res) {
 });
 
 function hash(input,salt){
-    var hashed = crypto.pbkdf2Sync(input, salt , 10000, 512, 'sha512');
+    var hashed = crypto.pbkdf2Sync('secret', 'salt' , 10000, 512, 'sha512');
     return ['pbkdf2','10000',salt,hashed.toString('hex')].join('$');
 }
 
@@ -191,8 +191,7 @@ app.get('/ui/main.js', function (req, res) {
 });
 
 var names = [];
-app.get('/submit-name/:name',function(req,res){//submit-name?name=xxxxxx
-   //get the name from the request
+app.get('/submit-name/:name',function(req,res){
    var name = req.params.name; //TODO
    
    names.push(name);
