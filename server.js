@@ -18,9 +18,12 @@ var app = express();
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(session({
-    secret: 'someRandomSecretValue',
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30}
-}));
+    
+    secret:"glassdoor",
+    cookies:{maxAge:1000*60*60*24*30}
+
+    
+    }));
 
 
 var counter=0;
@@ -101,8 +104,6 @@ app.post('/login',function(req,res){
     
     var username = req.body.username;
     var password = req.body.password;
-    
-    
 
     pool.query('SELECT * FROM "user" WHERE username = $1',[username],function(err,result){
         
